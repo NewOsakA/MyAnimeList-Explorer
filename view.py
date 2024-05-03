@@ -1,3 +1,4 @@
+"""UI for MyAnimeList Explorer application"""
 import tkinter as tk
 from tkinter import ttk
 from data_manager import DataManager

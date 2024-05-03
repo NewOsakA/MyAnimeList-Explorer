@@ -1,3 +1,4 @@
+"""Manage the data"""
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -12,5 +13,4 @@ class DataManager:
     def load_data(filepath):
         """Load data from CSV file"""
         df = pd.read_csv(filepath)
-
         return df

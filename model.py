@@ -8,5 +8,3 @@ class MALModel:
 
     def printtest(self):
         print(self.df.head())
-
-

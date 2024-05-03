@@ -3,7 +3,7 @@ from view import MALView
 
 
 class MALController:
-    """Controller for the Puppy Picker application."""
+    """Controller for the application."""
     def __init__(self):
         self.model = MALModel()
         self.view = MALView(self)
