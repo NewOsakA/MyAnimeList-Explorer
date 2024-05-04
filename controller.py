@@ -5,8 +5,11 @@ from view import MALView
 class MALController:
     """Controller for the application."""
     def __init__(self):
+        self.view= MALView(self)
         self.model = MALModel()
-        self.view = MALView(self)
+
+    def get_descriptive_data(self):
+        return self.model.descriptive_score()
 
     def search_button_clicked(self):
         """Handler for the search button click event"""
@@ -29,7 +32,7 @@ class MALController:
     def row_selected(self, anime_name):
         """Handler for when a row is selected"""
         row = self.model.df[self.model.df['Name'] == anime_name]
-        print(row.iloc[0])
+        return row
 
     def run(self):
         self.view.run()
