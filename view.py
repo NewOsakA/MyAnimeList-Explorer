@@ -10,8 +10,9 @@ class MALView(tk.Tk):
         super().__init__()
         self.controller = controller
         self.title("MyAnimeList Explorer")
-        self.minsize(width=1000, height=750)  # fix the minimum size of the screen
+        self.minsize(width=1100, height=750)  # fix the minimum size of the screen
         self.df = DataManager.load_data('anime-dataset-2023.csv')
+        self.search_keyword = tk.StringVar()
         self.init_component()
 
     def init_component(self):
@@ -19,7 +20,6 @@ class MALView(tk.Tk):
         white_bg = "#FFFAFA"
         blue_bg = "#2e51a2"
         light_blue_bg = "#CAE4FF"
-
 
 
         style = ttk.Style()
@@ -48,7 +48,6 @@ class MALView(tk.Tk):
         self.create_search_comp()
         self.create_listbox()
 
-
         # bottom frame
         self.bottom_frame = ttk.Frame(self, style="Right.TFrame")
         self.bottom_frame.grid(row=3, column=0, sticky="NSEW")
@@ -56,20 +55,33 @@ class MALView(tk.Tk):
 
     def create_search_comp(self):
         """Create search bar and search button"""
-        self.search = tk.Text(self.middle_frame, bg="white", height=2)
+        self.search = tk.Entry(self.middle_frame, bg="white", width=85, textvariable=self.search_keyword)
         self.search.grid(row=0, column=0, sticky="EW", padx=10, pady=10)
 
-        self.search_button = tk.Button(self.middle_frame, text="Search")
+        self.search_button = ttk.Button(self.middle_frame, text="Search", command=self.controller.search_button_clicked)
         self.search_button.grid(row=0, column=1, sticky="EW", padx=10, pady=10)
 
     def create_listbox(self):
         """Create treeview widget"""
-        columns = ('first_name', 'last_name', 'email')
+        columns = ('name', 'other name')
         self.list = ttk.Treeview(self.middle_frame, columns=columns, show='headings')
         self.list.grid(row=1, column=0, columnspan=2, sticky="NSEW", padx=10, pady=10)
-        self.list.heading('first_name', text='First Name')
-        self.list.heading('last_name', text='Last Name')
-        self.list.heading('email', text='Email')
+        self.list.heading('name', text='Name')
+        self.list.heading('other name', text='Other Name')
+        self.list.bind("<<TreeviewSelect>>", self.on_select)  # Bind the event to the callback method
+
+    def on_select(self, event):
+        """Callback method for when a row is selected"""
+        selected_item = self.list.selection()[0]  # Get the selected item
+        anime_name = self.list.item(selected_item, "values")[0]  # Get the anime name from the selected item
+        self.controller.row_selected(anime_name)  # Notify the controller that a row is selected
+
+    def populate_listbox(self, anime_names):
+        """Populate the treeview widget with matching anime names"""
+        self.list.delete(*self.list.get_children())  # Clear existing items
+        for name in anime_names:
+            other_name = self.controller.get_other_name(name)
+            self.list.insert('', 'end', values=(name, other_name))  # Insert anime name into the treeview
 
     def create_set_button(self):
         """Create interactive buttons at the bottom of the screen"""
@@ -85,8 +97,13 @@ class MALView(tk.Tk):
     def temp(self):
         pass
 
+    def btest(self):
+        keyword = self.search_keyword.get()
+        print(f"Here: {keyword}")
+
     def explore_page(self):
         """Create component for explore page"""
+        self.search_keyword = ""    # clear the search bar input
         self.clear_middle_frame()
         self.create_search_comp()
         self.create_listbox()
