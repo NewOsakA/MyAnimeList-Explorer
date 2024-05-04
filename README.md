@@ -11,7 +11,7 @@ The program is about exploring dog breed traits through graphs and finding your 
 python -m venv venv
 ```
 ```  
-   .\venv\Scripts\activate
+.\venv\Scripts\activate
 ```
 * Clone this repository to your device directory.
 * Install required packages mentioned in requirements.txt
