@@ -1,6 +1,7 @@
 # MyAnimeList-Explorer
 
-The program is about exploring dog breed traits through graphs and finding your ideal match with personalized recommendations.
+MyAnimeList Explorer is a program that process and visualize anime data with various kind of graph,
+and also finding anime information that you are interested with.
 
 ## How to Run
 
@@ -10,7 +11,7 @@ The program is about exploring dog breed traits through graphs and finding your 
 ```
 python -m venv venv
 ```
-```  
+```
 .\venv\Scripts\activate
 ```
 * Clone this repository to your device directory.
@@ -24,3 +25,4 @@ Use `python3` instead if `python` doesn't work.
 ```
 python main.py
 ```
+
