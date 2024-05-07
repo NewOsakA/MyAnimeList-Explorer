@@ -162,12 +162,15 @@ class MALView(tk.Tk):
                f"Score: {anime['Score']}\n\n" \
                f"Synopsis: {anime['Synopsis']}\n"
 
-        self.name = ttk.Label(self.middle_frame, text=anime['Name'], style="InfoLabel.TLabel", anchor=tk.CENTER
-                              , wraplength=600)
-        self.name.grid(row=0, column=1, padx=10, pady=(25, 0), sticky='NEW')
+        self.info_sub_frame = ttk.Frame(self.middle_frame, style='Light.TFrame')
+        self.info_sub_frame.grid(row=0, column=1, sticky='N')
 
-        self.other = ttk.Label(self.middle_frame, text=info, style="Info.TLabel", anchor=tk.W, wraplength=500)
-        self.other.grid(row=1, column=1, padx=10, pady=10)
+        self.name = ttk.Label(self.info_sub_frame, text=anime['Name'], style="InfoLabel.TLabel", anchor=tk.CENTER
+                              , wraplength=600)
+        self.name.grid(row=0, column=0, padx=10, pady=(25, 0), sticky='NEW')
+
+        self.other = ttk.Label(self.info_sub_frame, text=info, style="Info.TLabel", anchor=tk.W, wraplength=500)
+        self.other.grid(row=1, column=0, padx=10, pady=10)
 
     def info_page2(self):
         pass
@@ -269,7 +272,7 @@ class MALView(tk.Tk):
         image = self.load_image(image_url)
         label = tk.Label(self.middle_frame, image=image)
         label.image = image  # keep a reference to the image to prevent garbage collection
-        label.grid(row=0, column=0, padx=30, pady=30, rowspan=2)
+        label.grid(row=0, column=0, padx=30, pady=30)
 
     def load_image(self, image_url):
         """Load and resize the image"""
