@@ -7,6 +7,10 @@ and also finding anime information that you are interested with.
 
 ### Setup
 
+* Clone this repository to your device directory.
+```
+git clone https://github.com/NewOsakA/MyAnimeList-Explorer.git
+```
 * Create and activate a Python Virtual Environment.
 ```
 python -m venv venv
@@ -14,7 +18,6 @@ python -m venv venv
 ```
 .\venv\Scripts\activate
 ```
-* Clone this repository to your device directory.
 * Install required packages mentioned in requirements.txt
 ```
 pip install -r requirements.txt
