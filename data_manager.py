@@ -129,6 +129,7 @@ class DataManager:
         ax.set_xlabel('Source type and Score', fontsize=6)
         ax.set_ylabel('Source type and Score', fontsize=6)
         ax.tick_params(axis='both', which='major', labelsize=6)
+        ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
 
         fig.tight_layout(pad=0.5)
 
@@ -160,3 +161,40 @@ class DataManager:
         fig.tight_layout(pad=0.5)
 
         return fig
+
+    @staticmethod
+    def rank_comparison_bar(df, anime_name):
+        # Filter the DataFrame for the selected anime
+        selected_anime_df = df[df['Name'] == anime_name]
+
+        # Extract the rank, popularity, and favorites of the selected anime
+        rank = pd.to_numeric(selected_anime_df['Rank'].iloc[0], errors='coerce')
+        popularity = pd.to_numeric(selected_anime_df['Popularity'].iloc[0], errors='coerce')
+        favorites = pd.to_numeric(selected_anime_df['Favorites'].iloc[0], errors='coerce')
+
+        # Convert NaN values to 0
+        heights = [rank, popularity, favorites]
+        heights = [0 if np.isnan(val) else val for val in heights]
+
+        # Create the figure and axis objects
+        fig = Figure(figsize=(4, 3))
+        ax = fig.add_subplot(111)
+
+        # Plotting the grouped bar graph
+        bars = ['Rank', 'Popularity', 'Favorites']
+        x = range(len(bars))
+
+        ax.bar(x, heights, color=['blue', 'green', 'orange'])
+
+        # Set labels and title
+        ax.set_xlabel('Statistics', fontsize=6)
+        ax.set_ylabel('Value', fontsize=6)
+        ax.set_title(f'Statistics Comparison for this anime', fontsize=8)
+        ax.tick_params(axis='both', which='major', labelsize=6)
+        ax.set_xticks(x)
+        ax.set_xticklabels(bars)
+
+        fig.tight_layout()
+
+        return fig
+
