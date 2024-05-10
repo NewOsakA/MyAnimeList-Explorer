@@ -8,6 +8,14 @@ class MALController:
         self.view= MALView(self)
         self.model = MALModel()
 
+    def back_button_handler(self, location):
+        if location == 'InfoPage1':
+            self.view.explore_page()
+        elif location == 'InfoPage2':
+            self.view.info_page1(self.view.row)
+        elif location == 'DataPage':
+            self.view.explore_page()
+
     def get_descriptive_data(self):
         return self.model.descriptive_score()
 

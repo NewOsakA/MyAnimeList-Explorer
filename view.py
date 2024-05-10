@@ -24,6 +24,8 @@ class MALView(tk.Tk):
         self.selected_source = tk.StringVar()
         self.initial_combobox = 'Select Histogram'
         self.selected_source.set(self.initial_combobox)
+        self.location = 'Explore'   # default page
+        self.row = 0
         self.init_component()
 
     def init_component(self):
@@ -69,6 +71,8 @@ class MALView(tk.Tk):
         self.bottom_frame = ttk.Frame(self, style="Right.TFrame")
         self.bottom_frame.grid(row=3, column=0, sticky="NSEW")
         self.create_set_button()
+        self.statistical_button.config(state='disabled')
+        self.back_button.config(state='disabled')
 
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -81,6 +85,7 @@ class MALView(tk.Tk):
         self.search = ttk.Entry(self.middle_frame, width=85, textvariable=self.search_keyword)
         self.search.grid(row=0, column=0, sticky="EW", padx=10, pady=10)
         self.search.focus()
+        self.search.bind("<Return>", lambda event: self.controller.search_button_clicked())
 
         self.search_button = ttk.Button(self.middle_frame, text="Search", command=self.controller.search_button_clicked)
         self.search_button.grid(row=0, column=1, sticky="EW", padx=10, pady=10)
@@ -99,6 +104,7 @@ class MALView(tk.Tk):
         selected_item = self.list.selection()[0]  # Get the selected item
         anime_name = self.list.item(selected_item, "values")[0]  # Get the anime name from the selected item
         selected_row = self.controller.row_selected(anime_name)  # Notify the controller that a row is selected
+        self.row = selected_row
         self.info_page1(selected_row)
 
     def populate_listbox(self, anime_names):
@@ -110,7 +116,7 @@ class MALView(tk.Tk):
 
     def create_set_button(self):
         """Create interactive buttons at the bottom of the screen"""
-        nav_buttons = ['Explore', 'Data Story', 'Statistical Information', 'Characteristics Comparison', 'Exit']
+        nav_buttons = ['Explore', 'Data Story', 'Statistical Information', 'Back', 'Exit']
         button_commands = [self.explore_page, self.data_page,
                            self.temp, self.temp, self.destroy]
         padding = {"padx": 20, "pady": 20}
@@ -126,11 +132,18 @@ class MALView(tk.Tk):
                 button.grid(row=0, column=i, sticky='ew', **padding)
                 self.bottom_frame.grid_columnconfigure(i, weight=1)
 
+            if text == 'Statistical Information':
+                self.statistical_button = button
+            if text == 'Back':
+                self.back_button = button
+
     def temp(self):
+        """Empty function"""
         pass
 
     def explore_page(self):
         """Create component for explore page"""
+        self.location = 'Explore'
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
         self.middle_frame.grid_rowconfigure(0, weight=0)
@@ -141,10 +154,14 @@ class MALView(tk.Tk):
         self.clear_middle_frame()
         self.create_search_comp()
         self.create_listbox()
+        self.statistical_button.config(state='disabled')
+        self.back_button.config(state='disabled')
 
     def info_page1(self, row):
+        self.location = 'InfoPage1'
         self.clear_middle_frame()
         anime = DataManager.dict_transform(row)
+        self.back_button.config(state='active', command=lambda: self.controller.back_button_handler(self.location))
 
         self.middle_frame.grid_rowconfigure(0, weight=1)
         self.middle_frame.grid_columnconfigure(0, weight=0)
@@ -166,17 +183,65 @@ class MALView(tk.Tk):
         self.info_sub_frame.grid(row=0, column=1, sticky='N')
 
         self.name = ttk.Label(self.info_sub_frame, text=anime['Name'], style="InfoLabel.TLabel", anchor=tk.CENTER
-                              , wraplength=600)
+                              , wraplength=700)
         self.name.grid(row=0, column=0, padx=10, pady=(25, 0), sticky='NEW')
 
-        self.other = ttk.Label(self.info_sub_frame, text=info, style="Info.TLabel", anchor=tk.W, wraplength=500)
-        self.other.grid(row=1, column=0, padx=10, pady=10)
+        self.other = ttk.Label(self.info_sub_frame, text=info, style="Info.TLabel", anchor=tk.W, wraplength=600)
+        self.other.grid(row=1, column=0, padx=10, pady=10, sticky='W')
 
-    def info_page2(self):
-        pass
+        self.info_sub_frame.grid_rowconfigure(0, weight=1)
+        self.info_sub_frame.grid_rowconfigure(1, weight=1)
+        self.info_sub_frame.grid_rowconfigure(2, weight=1)
+        self.info_sub_frame.grid_columnconfigure(0, weight=1)
+
+        self.statistical_button.config(state='active')
+        self.statistical_button.config(command=lambda: self.info_page2(row))
+
+    def info_page2(self, row):
+        self.location = 'InfoPage2'
+        self.clear_middle_frame()
+        self.statistical_button.config(state='disabled')
+        self.back_button.config(state='active', command=lambda: self.controller.back_button_handler(self.location))
+        anime = DataManager.dict_transform(row)
+
+        info = f"Licensor: {anime['Licensors']}\n" \
+               f"Studio: {anime['Studios']}\n" \
+               f"Duration: {anime['Duration']}\n" \
+               f"Rating: {anime['Rating']}\n" \
+               f"Rank: {anime['Rank']}\n" \
+               f"Popularity: {anime['Popularity']}\n " \
+               f"Favorite: {anime['Favorites']}\n"
+
+        self.create_image_label(anime['Image URL'])
+
+        self.info_sub_frame = ttk.Frame(self.middle_frame, style='Light.TFrame')
+        self.info_sub_frame.grid(row=0, column=1, sticky='N')
+
+        self.name = ttk.Label(self.info_sub_frame, text=anime['Name'], style="InfoLabel.TLabel", anchor=tk.CENTER
+                              , wraplength=700)
+        self.name.grid(row=0, column=0, padx=10, pady=(25, 0), sticky='NEW')
+
+        self.other = ttk.Label(self.info_sub_frame, text=info, style="Info.TLabel", anchor=tk.W, wraplength=600)
+        self.other.grid(row=1, column=0, padx=10, pady=(10, 0), sticky='W')
+
+        fig_bar = DataManager.rank_comparison_bar(self.df, anime['Name'])
+        canvas = FigureCanvasTkAgg(fig_bar, master=self.info_sub_frame)
+        canvas_widget_bar = canvas.get_tk_widget()
+        canvas_widget_bar.grid(row=2, column=0, padx=10, pady=(20, 0), sticky='N')
+        canvas.draw()
+
+        # self.next = ttk.Button(self.info_sub_frame, text='Back', command=lambda: self.info_page1(row))
+        # self.next.grid(row=3, column=0, sticky='S', pady=25)
+
+        self.info_sub_frame.grid_rowconfigure(0, weight=1)
+        self.info_sub_frame.grid_rowconfigure(1, weight=1)
+        self.info_sub_frame.grid_rowconfigure(2, weight=1)
+        # self.info_sub_frame.grid_rowconfigure(3, weight=1)
+        self.info_sub_frame.grid_columnconfigure(0, weight=1)
 
     def data_page(self):
         """Create component for data page"""
+        self.location = 'DataPage'
         self.clear_middle_frame()
         self.middle_top_frame = tk.Frame(self.middle_frame, bg="white")
         self.middle_top_frame.pack(side="top", fill="x", expand=False, padx=20, pady=(20, 0))
