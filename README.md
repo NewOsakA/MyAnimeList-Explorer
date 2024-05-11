@@ -18,17 +18,16 @@ and also finding anime information that you are interested with.
 ### Data Story page
 <img src="https://github.com/NewOsakA/MyAnimeList-Explorer/blob/main/screenshots/story.png?raw=true" alt="Story page" width="549" height="388">
 
-## UML Class Diagram
-<img src="https://github.com/NewOsakA/MyAnimeList-Explorer/blob/main/diagram/class_diagram.png?raw=true" alt="Class Diagram" width="549" height="388">
-
-## Sequence Diagram
-<img src="https://github.com/NewOsakA/MyAnimeList-Explorer/blob/main/diagram/sequence_diagram.png?raw=true" width="549" height="388">
-
 ## Data Sources
 [https://www.kaggle.com/datasets/dbdmobile/myanimelist-dataset/data](https://www.kaggle.com/datasets/dbdmobile/myanimelist-dataset/data)
 
 ## Installation
 [GitHub Installation](https://github.com/NewOsakA/MyAnimeList-Explorer/wiki/Installation)
+
+## Documents
+* [Project Proposal](https://docs.google.com/document/d/17y0vjfWWERQnwS-0X3f4JmzdQyAh__me5fCkdcLA710/edit?usp=sharing)
+* [UML and Sequence Diagram](https://github.com/NewOsakA/MyAnimeList-Explorer/wiki/UML-and-Sequence-Diagram)
+* [Weekly Plan](https://github.com/NewOsakA/MyAnimeList-Explorer/wiki/Weekly-Plan)
 
 ## Application Demo
 [Youtube Demo Video](https://youtu.be/8aqR1w1rLXI)
